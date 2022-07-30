@@ -1,4 +1,4 @@
-const { getCities, getCityByName, createCity } = require('./db');
+const { createSignature, getSignatures } = require('./db');
 
 // getCities().then((cities) => console.log(cities));
 
@@ -6,8 +6,10 @@ const { getCities, getCityByName, createCity } = require('./db');
 //     console.log(city);
 // });
 
-createCity({
-    name: 'Frankfurt',
-    country: 'Germany',
-    population: 500000,
-}).then((newCity) => console.log(newCity));
+createSignature({
+    first_name: 'Ro',
+    last_name: 'u',
+    signature: 'L',
+}).then((newSignature) => console.log(newSignature));
+
+getSignatures().then((signatures) => console.log(signatures));

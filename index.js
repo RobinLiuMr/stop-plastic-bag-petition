@@ -2,7 +2,7 @@ const express = require('express');
 const path = require('path');
 
 // require needed db functions
-const {} = require('./db');
+const { createSignature, getSignatures } = require('./db');
 
 const app = express();
 // set up handlebars
@@ -36,6 +36,30 @@ app.post('/', (request, response) => {
         });
         return;
     }
+
+    createSignature(request.body)
+        .then(response.redirect('/thank-you'))
+        .catch((error) => {
+            console.log(error);
+            response.redirect('/');
+        });
+});
+
+// the thank you page
+app.get('/thank-you', (request, response) => {
+    response.render('thank-you', {
+        title: 'Thank You',
+    });
+});
+
+// signatures page
+app.get('/signatures', (request, response) => {
+    getSignatures().then((signatures) => {
+        response.render('signatures', {
+            title: 'Signatures',
+            signatures,
+        });
+    });
 });
 
 app.listen(8081, () => console.log(`Listening on http://localhost:8081`));
