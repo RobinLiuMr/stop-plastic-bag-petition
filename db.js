@@ -26,10 +26,17 @@ function getSignatures() {
     return db.query('SELECT * FROM signatures').then((result) => result.rows);
 }
 
-// function getCityByName(name) {
-//     return db
-//         .query('SELECT * FROM cities WHERE name = $1', [name])
-//         .then((result) => result.rows[0]);
-// }
+// CREATE TABLE signatures (
+//     id SERIAL PRIMARY KEY,
+//     first_name VARCHAR(255) NOT NULL,
+//     last_name VARCHAR(255) NOT NULL,
+//     signature TEXT NOT NULL CHECK (signature != '')
+// );
 
-module.exports = { createSignature, getSignatures };
+function getSignatureById(id) {
+    return db
+        .query('SELECT * FROM signatures WHERE id = $1', [id])
+        .then((result) => result.rows[0]);
+}
+
+module.exports = { createSignature, getSignatures, getSignatureById };

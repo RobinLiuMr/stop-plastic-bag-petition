@@ -1,8 +1,10 @@
 <form action='/' method='POST'>
     <input name='first_name' required placeholder='First Name' />
-    <input name='last_name' placeholder='Last Name' />
+    <input name='last_name' required placeholder='Last Name' />
     <input type='hidden' name='signature' value='data:image/png;base64,hello' />
     <button>Sign petition</button>
 
 </form>
-<div>{{error}}</div>
+{{#if error}}
+    <div>{{error}}</div>
+{{/if}}

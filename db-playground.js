@@ -1,4 +1,4 @@
-const { createSignature, getSignatures } = require('./db');
+const { getSignatureById } = require('./db');
 
 // getCities().then((cities) => console.log(cities));
 
@@ -6,10 +6,14 @@ const { createSignature, getSignatures } = require('./db');
 //     console.log(city);
 // });
 
-createSignature({
-    first_name: 'Ro',
-    last_name: 'u',
-    signature: 'L',
-}).then((newSignature) => console.log(newSignature));
+getSignatureById('4').then((x) => {
+    console.log(x);
+});
 
-getSignatures().then((signatures) => console.log(signatures));
+// createSignature({
+//     first_name: 'Ro',
+//     last_name: 'u',
+//     signature: 'L',
+// }).then((newSignature) => console.log(newSignature));
+
+// getSignatures().then((signatures) => console.log(signatures));
