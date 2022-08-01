@@ -1,10 +1,13 @@
 <form action='/' method='POST'>
-    <input name='first_name' required placeholder='First Name' />
+    <input name='first_name' placeholder='First Name' />
     <input name='last_name' required placeholder='Last Name' />
     <input type='hidden' name='signature' value='data:image/png;base64,hello' />
+    <canvas id='signature' width='400' height='400'></canvas>
     <button>Sign petition</button>
 
 </form>
 {{#if error}}
     <div>{{error}}</div>
 {{/if}}
+
+<script src='/draw-signature.js'></script>

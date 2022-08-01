@@ -1,11 +1,13 @@
 const express = require('express');
 const path = require('path');
 const cookieSession = require('cookie-session');
+const helmet = require('helmet');
 
 // require needed db functions
 const { createSignature, getSignatures, getSignatureById } = require('./db');
 
 const app = express();
+app.use(helmet()); // prevent vulnerabilities
 // set up handlebars
 const { engine } = require('express-handlebars');
 app.engine('handlebars', engine());
