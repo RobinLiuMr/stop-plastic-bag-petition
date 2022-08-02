@@ -29,7 +29,7 @@ app.use(express.urlencoded({ extended: false }));
 
 // handles the form submission
 app.post('/', (request, response) => {
-    console.log('POST /', request.body);
+    // console.log('POST /', request.body);
     if (
         !request.body.first_name ||
         !request.body.last_name ||
