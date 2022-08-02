@@ -4,7 +4,13 @@ const cookieSession = require('cookie-session');
 const helmet = require('helmet');
 
 // require needed db functions
-const { createSignature, getSignatures, getSignatureById } = require('./db');
+const {
+    createSignature,
+    getSignatures,
+    getSignatureByUserId,
+    createUser,
+    login,
+} = require('./db');
 
 const app = express();
 app.use(helmet()); // prevent vulnerabilities
@@ -27,22 +33,101 @@ app.use(express.static(path.join(__dirname, 'public')));
 // parse html post form request body
 app.use(express.urlencoded({ extended: false }));
 
-// handles the form submission
-app.post('/', (request, response) => {
-    // console.log('POST /', request.body);
+// the register page
+app.post('/register', (request, response) => {
     if (
         !request.body.first_name ||
         !request.body.last_name ||
-        !request.body.signature
+        !request.body.email ||
+        !request.body.password
     ) {
-        response.render('homepage', {
+        response.render('register', {
             title: 'Stop Crocs',
             error: `Please fill all fields!`,
         });
         return;
     }
 
-    createSignature(request.body)
+    createUser(request.body)
+        .then((newUser) => {
+            request.session.user_id = newUser.id;
+            response.redirect('/');
+        })
+        .catch((error) => {
+            console.log('create user', error);
+            response.status(500).render('register', {
+                title: 'Stop Crocs',
+                error: `New user was not created!`,
+            });
+        });
+});
+
+app.get('/register', (request, response) => {
+    if (request.session.user_id) {
+        response.redirect('/');
+        return;
+    }
+
+    response.render('register', {
+        title: 'Stop Crocs',
+    });
+});
+
+// login page
+app.post('/login', (request, response) => {
+    if (!request.body.email || !request.body.password) {
+        response.render('login', {
+            title: 'Stop Crocs',
+            error: `Please fill all fields!`,
+        });
+        return;
+    }
+
+    login(request.body)
+        .then((foundUser) => {
+            request.session.user_id = foundUser.id;
+            response.redirect('/');
+        })
+        .catch((error) => {
+            console.log('login user', error);
+            response.status(500).render('login', {
+                title: 'Stop Crocs',
+                error: `No user was not found!`,
+            });
+        });
+});
+
+app.get('/login', (request, response) => {
+    if (request.session.user_id) {
+        response.redirect('/');
+        return;
+    }
+
+    response.render('login', {
+        title: 'Stop Crocs',
+    });
+});
+
+// signature submission page
+app.post('/', (request, response) => {
+    // console.log('POST /', request.body);
+    if (!request.session.user_id) {
+        response.redirect('/login');
+        return;
+    }
+
+    if (!request.body.signature) {
+        response.render('homepage', {
+            title: 'Stop Crocs',
+            error: `Please draw your signature!`,
+        });
+        return;
+    }
+
+    createSignature({
+        user_id: request.session.user_id,
+        signature: request.body.signature,
+    })
         .then((newSignature) => {
             request.session.signatureID = newSignature.id;
             response.redirect('/thank-you');
@@ -53,8 +138,12 @@ app.post('/', (request, response) => {
         });
 });
 
-// the landing page, with the form
 app.get('/', (request, response) => {
+    if (!request.session.user_id) {
+        response.redirect('/register');
+        return;
+    }
+
     if (request.session.signatureID) {
         response.redirect('/thank-you');
         return;
@@ -67,15 +156,20 @@ app.get('/', (request, response) => {
 
 // the thank you page
 app.get('/thank-you', (request, response) => {
+    if (!request.session.user_id) {
+        response.redirect('/login');
+        return;
+    }
+
     if (!request.session.signatureID) {
         response.redirect('/');
         return;
     }
 
-    getSignatureById(request.session.signatureID).then((signedUser) => {
+    getSignatureByUserId(request.session.user_id).then((foundSignature) => {
         response.render('thank-you', {
             title: 'Thank You',
-            signedUser,
+            foundSignature,
         });
     });
 });

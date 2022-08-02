@@ -1,19 +1,22 @@
-const { getSignatureById } = require('./db');
+// db-playground.js
+const { createUser, login } = require('./db.js');
 
-// getCities().then((cities) => console.log(cities));
+// createUser({
+//     first_name: 'yo',
+//     last_name: 'yo',
+//     email: 'yo@yo.com',
+//     password: 'yo',
+// })
+//     .then((newUser) => {
+//         console.log('newUser', newUser);
+//     })
+//     .catch((error) => {
+//         console.log('error creating user', error);
+//     });
 
-// getCityByName('Berlin').then((city) => {
-//     console.log(city);
-// });
-
-getSignatureById('4').then((x) => {
-    console.log(x);
+login({
+    email: 'yo@yo.com',
+    password: 'yoo',
+}).then((foundUser) => {
+    console.log('foundUser', foundUser);
 });
-
-// createSignature({
-//     first_name: 'Ro',
-//     last_name: 'u',
-//     signature: 'L',
-// }).then((newSignature) => console.log(newSignature));
-
-// getSignatures().then((signatures) => console.log(signatures));
