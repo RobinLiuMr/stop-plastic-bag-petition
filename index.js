@@ -176,6 +176,11 @@ app.get('/thank-you', (request, response) => {
 
 // signatures page
 app.get('/signatures', (request, response) => {
+    if (!request.session.user_id) {
+        response.redirect('/login');
+        return;
+    }
+
     if (!request.session.signatureID) {
         response.redirect('/');
         return;

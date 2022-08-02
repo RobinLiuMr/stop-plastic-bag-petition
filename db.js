@@ -71,7 +71,7 @@ function createSignature({ user_id, signature }) {
 }
 
 function getSignatures() {
-    return db.query('SELECT * FROM signatures').then((result) => result.rows);
+    return db.query('SELECT * FROM users').then((result) => result.rows);
 }
 
 // function getSignatureById(id) {
