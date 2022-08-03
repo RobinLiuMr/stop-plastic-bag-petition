@@ -11,7 +11,7 @@ const {
     createUser,
     login,
     createUserProfile,
-    getSignatureByCity,
+    getSignaturesByCity,
 } = require('./db');
 
 const app = express();
@@ -23,7 +23,7 @@ app.set('view engine', 'handlebars');
 
 // set up cookies
 const { SESSION_SECRET } = require('./secrets.json');
-const { response } = require('express');
+
 app.use(
     cookieSession({
         secret: SESSION_SECRET,
@@ -85,7 +85,7 @@ app.post('/register', (request, response) => {
     createUser(request.body)
         .then((newUser) => {
             request.session.user_id = newUser.id;
-            response.redirect('/');
+            response.redirect('/profile');
         })
         .catch((error) => {
             console.log('create user', error);
@@ -98,7 +98,7 @@ app.post('/register', (request, response) => {
 
 app.get('/register', (request, response) => {
     if (request.session.user_id) {
-        response.redirect('/');
+        response.redirect('/thank-you');
         return;
     }
 
@@ -120,7 +120,7 @@ app.post('/login', (request, response) => {
     login(request.body)
         .then((foundUser) => {
             request.session.user_id = foundUser.id;
-            response.redirect('/');
+            response.redirect('/thank-you');
         })
         .catch((error) => {
             console.log('login user', error);
@@ -133,7 +133,7 @@ app.post('/login', (request, response) => {
 
 app.get('/login', (request, response) => {
     if (request.session.user_id) {
-        response.redirect('/');
+        response.redirect('/thank-you');
         return;
     }
 
@@ -223,6 +223,27 @@ app.get('/signatures', (request, response) => {
     getSignatures().then((signatures) => {
         response.render('signatures', {
             title: 'Signatures',
+            signatures,
+        });
+    });
+});
+
+// signatures by city page
+app.get('/signatures/:city', (request, response) => {
+    if (!request.session.user_id) {
+        response.redirect('/login');
+        return;
+    }
+
+    if (!request.session.signatureID) {
+        response.redirect('/');
+        return;
+    }
+
+    getSignaturesByCity(request.params.city).then((signatures) => {
+        response.render('signaturesByCity', {
+            title: 'Signatures By City',
+            city: request.params.city,
             signatures,
         });
     });

@@ -99,7 +99,7 @@ function getSignatures() {
         .then((result) => result.rows);
 }
 
-function getSignatureByCity(city) {
+function getSignaturesByCity(city) {
     return db
         .query(
             `
@@ -111,7 +111,7 @@ function getSignatureByCity(city) {
         `,
             [city]
         )
-        .then((result) => result.rows[0]);
+        .then((result) => result.rows);
 }
 
 // petition=# SELECT * FROM signatures;
@@ -130,5 +130,5 @@ module.exports = {
     createUser,
     login,
     createUserProfile,
-    getSignatureByCity,
+    getSignaturesByCity,
 };

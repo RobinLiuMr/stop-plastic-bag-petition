@@ -1,0 +1,12 @@
+<form action='/profile' method='POST'>
+    <input name='age' placeholder='Age' />
+    <input name='city' placeholder='City' />
+    <input name='homepage' placeholder='Homepage' />
+
+    <button>Continue</button>
+
+</form>
+
+{{#if error}}
+    <div>{{error}}</div>
+{{/if}}

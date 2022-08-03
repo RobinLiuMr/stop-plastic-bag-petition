@@ -2,5 +2,5 @@ node_modules
 .DS_Store
 package-lock.json
 secrets.json
-db-playground.js
 .vscode
+db-playground.js
