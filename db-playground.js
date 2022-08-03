@@ -1,5 +1,5 @@
 // db-playground.js
-const { createUser, login } = require('./db.js');
+const { createUser, createUserProfile } = require('./db.js');
 
 // createUser({
 //     first_name: 'yo',
@@ -14,9 +14,15 @@ const { createUser, login } = require('./db.js');
 //         console.log('error creating user', error);
 //     });
 
-login({
-    email: 'yo@yo.com',
-    password: 'yoo',
-}).then((foundUser) => {
-    console.log('foundUser', foundUser);
-});
+createUserProfile({
+    user_id: 1,
+    age: 99,
+    city: 'Berlin',
+    homepage: 'www.yo.com',
+})
+    .then((newUser) => {
+        console.log('newUser', newUser);
+    })
+    .catch((error) => {
+        console.log('error creating user', error);
+    });

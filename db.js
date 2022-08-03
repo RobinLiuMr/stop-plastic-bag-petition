@@ -13,6 +13,22 @@ const db = spicedPg(
 const hash = (password) =>
     bcrypt.genSalt().then((salt) => bcrypt.hash(password, salt));
 
+// petition=# SELECT * FROM user_profiles;
+//  id | user_id | age | city | homepage
+// ----+---------+-----+------+----------
+function createUserProfile({ user_id, age, city, homepage }) {
+    return db
+        .query(
+            `
+            INSERT INTO user_profiles (user_id, age, city, homepage)
+            VALUES ($1, $2, $3, $4)
+            RETURNING *
+        `,
+            [user_id, age, city, homepage]
+        )
+        .then((result) => result.rows[0]);
+}
+
 // petition=# SELECT * FROM users;
 //  id | first_name | last_name | email_address | password_hash | created_at
 // ----+------------+-----------+---------------+---------------+------------
@@ -71,14 +87,32 @@ function createSignature({ user_id, signature }) {
 }
 
 function getSignatures() {
-    return db.query('SELECT * FROM users').then((result) => result.rows);
+    return db
+        .query(
+            `
+            SELECT * FROM users
+            JOIN signatures ON signatures.user_id = users.id
+            FULL JOIN user_profiles ON user_profiles.user_id = users.id
+            WHERE signatures.signature IS NOT NULL
+            `
+        )
+        .then((result) => result.rows);
 }
 
-// function getSignatureById(id) {
-//     return db
-//         .query('SELECT * FROM signatures WHERE id = $1', [id])
-//         .then((result) => result.rows[0]);
-// }
+function getSignatureByCity(city) {
+    return db
+        .query(
+            `
+            SELECT * FROM users
+            JOIN signatures ON signatures.user_id = users.id
+            FULL JOIN user_profiles ON user_profiles.user_id = users.id
+            WHERE signatures.signature IS NOT NULL
+            AND user_profiles.city ILIKE $1
+        `,
+            [city]
+        )
+        .then((result) => result.rows[0]);
+}
 
 // petition=# SELECT * FROM signatures;
 //  id | user_id | signature
@@ -95,4 +129,6 @@ module.exports = {
     getSignatureByUserId,
     createUser,
     login,
+    createUserProfile,
+    getSignatureByCity,
 };

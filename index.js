@@ -10,6 +10,8 @@ const {
     getSignatureByUserId,
     createUser,
     login,
+    createUserProfile,
+    getSignatureByCity,
 } = require('./db');
 
 const app = express();
@@ -21,6 +23,7 @@ app.set('view engine', 'handlebars');
 
 // set up cookies
 const { SESSION_SECRET } = require('./secrets.json');
+const { response } = require('express');
 app.use(
     cookieSession({
         secret: SESSION_SECRET,
@@ -32,6 +35,37 @@ app.use(
 app.use(express.static(path.join(__dirname, 'public')));
 // parse html post form request body
 app.use(express.urlencoded({ extended: false }));
+
+// the profile page
+app.post('/profile', (request, response) => {
+    if (!request.session.user_id) {
+        response.redirect('/login');
+        return;
+    }
+
+    createUserProfile({
+        user_id: request.session.user_id,
+        ...request.body,
+    })
+        .then(response.redirect('/'))
+        .catch(() => {
+            response.render('profile', {
+                title: 'profile',
+                error: `Please fill all fields!`,
+            });
+        });
+});
+
+app.get('/profile', (request, response) => {
+    if (!request.session.user_id) {
+        response.redirect('/login');
+        return;
+    }
+
+    response.render('profile', {
+        title: 'profile',
+    });
+});
 
 // the register page
 app.post('/register', (request, response) => {

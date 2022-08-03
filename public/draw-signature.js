@@ -9,11 +9,6 @@ let dot_flag = false;
 
 init();
 
-// get the image data
-let dataURL = canvas.toDataURL();
-let signData = document.getElementById('sign_data');
-signData.value = dataURL;
-
 function init() {
     canvas.addEventListener('mousemove', (event) => {
         findxy('move', event);
@@ -23,9 +18,11 @@ function init() {
     });
     canvas.addEventListener('mouseup', (event) => {
         findxy('up', event);
+        save();
     });
     canvas.addEventListener('mouseout', (event) => {
         findxy('out', event);
+        save();
     });
 }
 
@@ -68,4 +65,11 @@ function draw() {
     ctx.lineTo(currX, currY);
     ctx.stroke();
     ctx.closePath();
+}
+
+// save the image data
+function save() {
+    let dataURL = canvas.toDataURL();
+    let signData = document.getElementById('sign_data');
+    signData.value = dataURL;
 }
