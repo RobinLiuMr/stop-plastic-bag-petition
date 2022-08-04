@@ -1,0 +1,32 @@
+<p>Edit your profile</p>
+<form action='/profile/edit' method='POST'>
+    <input
+        name='first_name'
+        required
+        value='{{first_name}}'
+        placeholder='First Name'
+    />
+    <input
+        name='last_name'
+        required
+        value='{{last_name}}'
+        placeholder='Last Name'
+    />
+    <input
+        name='email'
+        type='email'
+        required
+        value='{{email}}'
+        placeholder='Email Address'
+    />
+    <input name='age' value='{{age}}' placeholder='Age' />
+    <input name='city' value='{{city}}' placeholder='City' />
+    <input name='homepage' placeholder='Homepage' />
+
+    <button>UPDATE</button>
+
+</form>
+
+{{#if error}}
+    <div>{{error}}</div>
+{{/if}}

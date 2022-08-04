@@ -1,8 +1,13 @@
 <div>
 
     <img src='{{foundSignature.signature}}' alt='current signature' />
-
-    {{!-- <div>{{foundSignature.signature}}</div> --}}
     <a href='/signatures'>See all signers</a>
+    <a href='/profile/edit'>Edit your profile</a>
+    <form action='/logout' method='POST'>
+        <button>Logout</button>
+    </form>
+    <form action='/unsign' method='POST' id='unsign'>
+        <button>Delete Signature</button>
+    </form>
 
 </div>

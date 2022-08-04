@@ -12,6 +12,10 @@ const {
     login,
     createUserProfile,
     getSignaturesByCity,
+    getUserInfo,
+    updateUser,
+    upsertUserProfile,
+    deleteSignature,
 } = require('./db');
 
 const app = express();
@@ -48,7 +52,8 @@ app.post('/profile', (request, response) => {
         ...request.body,
     })
         .then(response.redirect('/'))
-        .catch(() => {
+        .catch((error) => {
+            console.log('create user profile error', error);
             response.render('profile', {
                 title: 'profile',
                 error: `Please fill all fields!`,
@@ -65,6 +70,44 @@ app.get('/profile', (request, response) => {
     response.render('profile', {
         title: 'profile',
     });
+});
+
+// edit profile -- editProfile.handlebars
+app.get('/profile/edit', (request, response) => {
+    if (!request.session.user_id) {
+        response.redirect('/login');
+        return;
+    }
+
+    getUserInfo(request.session.user_id).then((userInfo) => {
+        response.render('editProfile', {
+            title: 'Edit Profile',
+            ...userInfo,
+        });
+    });
+});
+
+app.post('/profile/edit', (request, response) => {
+    if (!request.session.user_id) {
+        response.redirect('/login');
+        return;
+    }
+
+    const update_user = updateUser({
+        ...request.body,
+        ...request.session,
+    });
+
+    const update_profile = upsertUserProfile({
+        ...request.session,
+        ...request.body,
+    });
+
+    Promise.all([update_user, update_profile])
+        .then(response.redirect('/'))
+        .catch((error) => {
+            console.log('edit profile error', error);
+        });
 });
 
 // the register page
@@ -247,6 +290,25 @@ app.get('/signatures/:city', (request, response) => {
             signatures,
         });
     });
+});
+
+// log out
+app.post('/logout', (request, response) => {
+    request.session = null;
+    response.redirect('/login');
+});
+
+// delete signature
+app.post('/unsign', (request, response) => {
+    deleteSignature(request.session.user_id)
+        .then(() => {
+            request.session.signatureID = null;
+            response.redirect('/');
+        })
+
+        .catch((error) => {
+            console.log('delete signature', error);
+        });
 });
 
 app.listen(8081, () => console.log(`Listening on http://localhost:8081`));
