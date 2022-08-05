@@ -18,8 +18,8 @@ CREATE TABLE user_profiles (
     id SERIAL PRIMARY KEY,
     user_id INT NOT NULL UNIQUE REFERENCES users (id),
     age INT,
-    city VARCHAR(255) NOT NULL,
-    homepage VARCHAR(255) NOT NULL
+    city VARCHAR(255),
+    homepage VARCHAR(255)
 );
 
 
@@ -27,5 +27,5 @@ CREATE TABLE user_profiles (
 CREATE TABLE signatures (
     id SERIAL PRIMARY KEY,
     user_id INT NOT NULL UNIQUE REFERENCES users (id),
-    signature TEXT NOT NULL CHECK (signature != '')
+    signature TEXT
 );

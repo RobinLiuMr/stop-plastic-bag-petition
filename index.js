@@ -52,12 +52,8 @@ app.post('/profile', (request, response) => {
         ...request.body,
     })
         .then(response.redirect('/'))
-        .catch((error) => {
-            console.log('create user profile error', error);
-            response.render('profile', {
-                title: 'profile',
-                error: `Please fill all fields!`,
-            });
+        .catch(() => {
+            console.log('empty user profile');
         });
 });
 
@@ -163,6 +159,7 @@ app.post('/login', (request, response) => {
     login(request.body)
         .then((foundUser) => {
             request.session.user_id = foundUser.id;
+            request.session.signatureID = foundUser.id;
             response.redirect('/thank-you');
         })
         .catch((error) => {
