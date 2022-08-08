@@ -23,7 +23,8 @@ router.get('/register', (request, response) => {
     }
 
     response.render('register', {
-        title: 'Stop Corona',
+        title: 'Stop Plastic Bag',
+        name: 'register',
     });
 });
 
@@ -35,7 +36,8 @@ router.post('/register', (request, response) => {
         !request.body.password
     ) {
         response.render('register', {
-            title: 'Stop Corona',
+            title: 'Stop Plastic Bag',
+            name: 'register',
             error: `Please fill all fields!`,
         });
         return;
@@ -49,7 +51,8 @@ router.post('/register', (request, response) => {
         .catch((error) => {
             console.log('create user', error);
             response.status(500).render('register', {
-                title: 'Stop Corona',
+                title: 'Stop Plastic Bag',
+                name: 'register',
                 error: `New user was not created!`,
             });
         });
@@ -70,6 +73,7 @@ router.post('/profile', checkLogin, (request, response) => {
 router.get('/profile', checkLogin, (request, response) => {
     response.render('profile', {
         title: 'profile',
+        name: 'profile',
     });
 });
 
@@ -77,7 +81,8 @@ router.get('/profile', checkLogin, (request, response) => {
 router.post('/login', (request, response) => {
     if (!request.body.email || !request.body.password) {
         response.render('login', {
-            title: 'Stop Corona',
+            title: 'Stop Plastic Bag',
+            name: 'login',
             error: `Please fill all fields!`,
         });
         return;
@@ -92,7 +97,8 @@ router.post('/login', (request, response) => {
         .catch((error) => {
             console.log('login user', error);
             response.status(500).render('login', {
-                title: 'Stop Corona',
+                title: 'Stop Plastic Bag',
+                name: 'login',
                 error: `No user was not found!`,
             });
         });
@@ -105,7 +111,8 @@ router.get('/login', (request, response) => {
     }
 
     response.render('login', {
-        title: 'Stop Corona',
+        title: 'Stop Plastic Bag',
+        name: 'login',
     });
 });
 
@@ -114,6 +121,7 @@ router.get('/profile/edit', checkLogin, (request, response) => {
     getUserInfo(request.session.userID).then((userInfo) => {
         response.render('editProfile', {
             title: 'Edit Profile',
+            name: 'edit',
             ...userInfo,
         });
     });

@@ -1,14 +1,21 @@
-<div class='signature-list'>
-    <p>We signed: </p>
+<header>
+    <div class='icon'>
+        <img src='/asset/noun-no-plastic-bag-3149101.svg' />
+    </div>
+    <h1>Stop Plastic Bag</h1>
+</header>
+<p>
+    We signed here to help to stop plastic bag.
+</p>
+<div class='signatures'>
     {{#each signatures}}
         <div>
-            <a href='http://{{homepage}}'>{{first_name}}
+            <a href='http://{{homepage}}' target='_blank'>{{first_name}}
                 {{last_name}}
                 ({{age}})</a>
 
-            <a href='/signatures/{{city}}'>{{city}}</a>
+            <a class='city' href='/signatures/{{city}}'>{{city}}</a>
 
         </div>
     {{/each}}
-
 </div>

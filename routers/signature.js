@@ -18,7 +18,8 @@ const { checkLogin, checkSignature } = require('./middleware');
 router.post('/', checkLogin, (request, response) => {
     if (!request.body.signature) {
         response.render('homepage', {
-            title: 'Stop Corona',
+            title: 'Stop Plastic Bag',
+            name: 'homepage',
             error: `Please draw your signature!`,
         });
         return;
@@ -46,7 +47,8 @@ router.get('/', checkLogin, (request, response) => {
     }
 
     response.render('homepage', {
-        title: 'Stop Corona',
+        title: 'Stop Plastic Bag',
+        name: 'homepage',
     });
 });
 
@@ -55,6 +57,7 @@ router.get('/thank-you', checkLogin, checkSignature, (request, response) => {
     getSignatureByUserId(request.session.userID).then((foundSignature) => {
         response.render('thank-you', {
             title: 'Thank You',
+            name: 'thank-you',
             foundSignature,
         });
     });
@@ -65,6 +68,7 @@ router.get('/signatures', checkLogin, checkSignature, (request, response) => {
     getSignatures().then((signatures) => {
         response.render('signatures', {
             title: 'Signatures',
+            name: 'signatures',
             signatures,
         });
     });
@@ -79,6 +83,7 @@ router.get(
         getSignaturesByCity(request.params.city).then((signatures) => {
             response.render('signaturesByCity', {
                 title: 'Signatures By City',
+                name: 'city',
                 city: request.params.city,
                 signatures,
             });

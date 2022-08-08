@@ -3,21 +3,6 @@ const path = require('path');
 const cookieSession = require('cookie-session');
 const helmet = require('helmet');
 
-// require needed db functions
-const {
-    createSignature,
-    getSignatures,
-    getSignatureByUserId,
-    createUser,
-    login,
-    createUserProfile,
-    getSignaturesByCity,
-    getUserInfo,
-    updateUser,
-    upsertUserProfile,
-    deleteSignature,
-} = require('./db');
-
 const app = express();
 app.use(helmet()); // prevent vulnerabilities
 // set up handlebars
@@ -27,17 +12,6 @@ app.set('view engine', 'handlebars');
 
 // set up cookies
 const { SESSION_SECRET } = require('./secrets.json');
-
-// function to check login state
-function checkLogin(request, response, next) {
-    if (!request.session.userID) {
-        console.log('not logged in!');
-        response.redirect('/login');
-        return;
-    }
-    console.log('logged in!');
-    next();
-}
 
 app.use(
     cookieSession({

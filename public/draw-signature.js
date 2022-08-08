@@ -11,13 +11,16 @@ init();
 
 function init() {
     canvas.addEventListener('mousemove', (event) => {
+        console.log('mouse move');
         findxy('move', event);
     });
     canvas.addEventListener('mousedown', (event) => {
+        console.log('mouse down');
         findxy('down', event);
     });
     canvas.addEventListener('mouseup', (event) => {
         findxy('up', event);
+        console.log('mouse up');
         save();
     });
     canvas.addEventListener('mouseout', (event) => {
